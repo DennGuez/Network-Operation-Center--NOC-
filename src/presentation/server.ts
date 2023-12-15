@@ -1,7 +1,6 @@
-import { CheckService } from "../domain/use-cases/checks/check-service";
 import { FileSystemDatasource } from "../infrastructure/datasources/file-system.datasource";
 import { LogRepositoryImpl } from "../infrastructure/repositories/log.repository.impl";
-import { CronService } from "./cron/cron-service";
+import { EmailService } from "./email/email.service";
 
 const fileSystemLogRepository = new LogRepositoryImpl( 
     new FileSystemDatasource(),
@@ -13,18 +12,30 @@ export class Server {
 
         console.log('Server started...');
 
+        /* Mandar email */
+        const emailService = new EmailService();
+        emailService.sendEmail({
+            to: 'dennisrodriguezx@gmail.com',
+            subject: 'Logs del sistema',
+            htmlBody: `
+                <h3>Logs de sistema - NOC</h3>
+                <p>Lorem impsum</p>
+                <p>Ver logs adjuntos</p>
+            `
+        })
+        
         /* Pasamos argumentos a nuestro servicio y lo ejecutamos cada 5 sec */
-        CronService.createJob(
-            '*/5 * * * * *',
-            () => {
-                const url = 'https://google.com'
-                new CheckService(
-                    fileSystemLogRepository,
-                    () => console.log( `${ url } is ok` ),
-                    ( error ) => console.log( error )
-                ).execute( url )
-            }
-        );
+        // CronService.createJob(
+        //     '*/5 * * * * *',
+        //     () => {
+        //         const url = 'https://google.com'
+        //         new CheckService(
+        //             fileSystemLogRepository,
+        //             () => console.log( `${ url } is ok` ),
+        //             ( error ) => console.log( error )
+        //         ).execute( url )
+        //     }
+        // );
 
     }
 }

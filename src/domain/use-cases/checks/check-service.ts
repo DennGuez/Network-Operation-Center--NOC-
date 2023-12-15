@@ -26,14 +26,23 @@ export class CheckService implements CheckServiceUseCase{
                 throw new Error(`Error on check service ${ url }`);
             }
             /* Si todo sale bien grabamos un log */
-            const log = new LogEntity(`Service ${ url } woring`, LogSeverityLevel.low );
+            const message = `Service ${ url } woring`;
+            const log = new LogEntity({
+                message: message,
+                level: LogSeverityLevel.low,
+                origin: 'check-service.ts',
+            } );
             this.logRepository.saveLog( log );
             this.successCallback && this.successCallback();
             return true
         } catch (error) {
             /* Si falla */
             const erroMessage = `${ url } is not ok. ${ error }`
-            const log = new LogEntity(erroMessage , LogSeverityLevel.high );
+            const log = new LogEntity({
+                message: erroMessage , 
+                level: LogSeverityLevel.high,
+                origin: 'check-service.ts',
+            });
             this.logRepository.saveLog( log );
             this.errorCallback && this.errorCallback( `${ erroMessage }`)
             return false
