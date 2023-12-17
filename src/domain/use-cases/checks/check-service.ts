@@ -26,7 +26,7 @@ export class CheckService implements CheckServiceUseCase{
                 throw new Error(`Error on check service ${ url }`);
             }
             /* Si todo sale bien grabamos un log */
-            const message = `Service ${ url } woring`;
+            const message = `Service ${ url } working`;
             const log = new LogEntity({
                 message: message,
                 level: LogSeverityLevel.low,

@@ -3,14 +3,15 @@ import { CheckService } from "../domain/use-cases/checks/check-service";
 import { SendEmailLogs } from "../domain/use-cases/email/send-email-logs";
 import { FileSystemDatasource } from "../infrastructure/datasources/file-system.datasource";
 import { MongoLogDatasource } from "../infrastructure/datasources/mongo-log.datasource";
+import { PostgresLogDatasource } from "../infrastructure/datasources/postgres-log.datasource";
 import { LogRepositoryImpl } from "../infrastructure/repositories/log.repository.impl";
 import { CronService } from "./cron/cron-service";
 import { EmailService } from "./email/email.service";
 
 const logRepository = new LogRepositoryImpl( 
     // new FileSystemDatasource(),
-    new MongoLogDatasource()
-    // new postgresSQLLogDatasource()
+    // new MongoLogDatasource()
+    new PostgresLogDatasource()
 );
 
 const emailService = new EmailService();
@@ -38,9 +39,9 @@ export class Server {
         //     `
         // })
 
-        /* Obtener los por Severity */
-        const logs = await logRepository.getLogs(LogSeverityLevel.low);
-        console.log(logs)
+        /* Obtener los por Severity de Mongo*/
+        // const logs = await logRepository.getLogs(LogSeverityLevel.low);
+        // console.log(logs)
 
         /* Mandar email con archivos */
         // emailService.sendEmailWithFileSystemLogs(
@@ -48,17 +49,17 @@ export class Server {
         // )
         
         /* Pasamos argumentos a nuestro servicio y lo ejecutamos cada 5 sec */
-        // CronService.createJob(
-        //     '*/5 * * * * *',
-        //     () => {
-        //         const url = 'https://googlasdfse.com'
-        //         new CheckService(
-        //             logRepository,
-        //             () => console.log( `${ url } is ok` ),
-        //             ( error ) => console.log( error )
-        //         ).execute( url )
-        //     }
-        // );
+        CronService.createJob(
+            '*/5 * * * * *',
+            () => {
+                const url = 'https://google.com'
+                new CheckService(
+                    logRepository,
+                    () => console.log( `${ url } is ok` ),
+                    ( error ) => console.log( error )
+                ).execute( url )
+            }
+        );
 
     }
 }
