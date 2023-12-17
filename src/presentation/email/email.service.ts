@@ -1,7 +1,5 @@
 import nodemailer from 'nodemailer';
 import { envs } from '../../config/plugins/envs.plugin';
-import { LogRepository } from '../../domain/repository/log.repository';
-import { LogEntity, LogSeverityLevel } from '../../domain/entities/log.entity';
 interface SendEmailOptions {
     to: string | string[],
     subject: string,
@@ -41,20 +39,8 @@ export class EmailService {
             });
             console.log(sendInformation);
 
-    /* Si todo sale bien creamos el log para enviar al repository */
-            const log = new LogEntity({
-                level: LogSeverityLevel.low,
-                message: "Email sent",
-                origin: "email.service.ts"
-            });          
-
             return true;
-        } catch (error) {
-            const log = new LogEntity({
-                level: LogSeverityLevel.high,
-                message: "Email not sent",
-                origin: "email.service.ts"
-            });          
+        } catch (error) {      
             return false;
         }
     }

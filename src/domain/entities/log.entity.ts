@@ -29,6 +29,7 @@ export class LogEntity {
     // Recibimos esto como un string para crear instancias
     // "{"level": "high", "message": "Hola Mundo", "createdAt": "21349TZ12341234"}"
     static fromJson = ( json: string ): LogEntity => {
+        json = (json === '') ? '{}': json;
         const { message, level, createdAt, origin} = JSON.parse(json);
 
         const log = new LogEntity({
@@ -39,6 +40,15 @@ export class LogEntity {
         });
         /* No hace falta porque lo estamos enviando arriba */
         // log.createdAt = new Date(createdAt);
+        return log;
+    }
+
+    static fromObject = ( object: { [key: string]: any  } ): LogEntity => {
+        const { message, level, createdAt, origin } = object;
+        const log = new LogEntity({
+            message, level, createdAt, origin
+        })
+
         return log;
     }
 
